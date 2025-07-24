@@ -4,6 +4,7 @@
 #
 %define		pkgname	asn1-encoding
 Summary:	ASN1 data reader and writer in RAW, BER and DER forms
+Summary(pl.UTF-8):	Biblioteka odczytu i zapisu danych ASN1 w postaciach RAW, BER i DER
 Name:		ghc-%{pkgname}
 Version:	0.9.6
 Release:	2
@@ -15,15 +16,23 @@ Source0:	http://hackage.haskell.org/package/%{pkgname}-%{version}/%{pkgname}-%{v
 URL:		http://hackage.haskell.org/package/asn1-encoding
 BuildRequires:	ghc >= 6.12.3
 BuildRequires:	ghc-asn1-types >= 0.3.0
+BuildRequires:	ghc-asn1-types < 0.4
+BuildRequires:	ghc-base >= 3
+BuildRequires:	ghc-base < 5
+BuildRequires:	ghc-bytestring
 BuildRequires:	ghc-hourglass >= 0.2.6
 %if %{with prof}
 BuildRequires:	ghc-prof
 BuildRequires:	ghc-asn1-types-prof >= 0.3.0
+BuildRequires:	ghc-base-prof >= 3
+BuildRequires:	ghc-bytestring-prof
 BuildRequires:	ghc-hourglass-prof >= 0.2.6
 %endif
 BuildRequires:	rpmbuild(macros) >= 1.608
 %requires_eq	ghc
 Requires(post,postun):	/usr/bin/ghc-pkg
+Requires:	ghc-base >= 3
+Requires:	ghc-bytestring
 Requires:	ghc-asn1-types >= 0.3.0
 Requires:	ghc-hourglass >= 0.2.6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -38,17 +47,23 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 ASN1 data reader and writer in raw form with supports for high level
 forms of ASN1 (BER, and DER).
 
+%description -l pl.UTF-8
+Biblioteka odczytu i zapisu danych ASN1 w postaci surowej z obsługują
+formatów ASN1 wyższego poziomu (BER i DER).
+
 %package prof
 Summary:	Profiling %{pkgname} library for GHC
 Summary(pl.UTF-8):	Biblioteka profilująca %{pkgname} dla GHC
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	ghc-asn1-types-prof >= 0.3.0
+Requires:	ghc-base-prof >= 3
+Requires:	ghc-bytestring-prof
 Requires:	ghc-hourglass-prof >= 0.2.6
 
 %description prof
-Profiling %{pkgname} library for GHC.  Should be installed when
-GHC's profiling subsystem is needed.
+Profiling %{pkgname} library for GHC. Should be installed when GHC's
+profiling subsystem is needed.
 
 %description prof -l pl.UTF-8
 Biblioteka profilująca %{pkgname} dla GHC. Powinna być zainstalowana
@@ -66,6 +81,7 @@ runhaskell Setup.hs configure -v2 \
 	--docdir=%{_docdir}/%{name}-%{version}
 
 runhaskell Setup.hs build
+
 runhaskell Setup.hs haddock --executables
 
 %install
@@ -96,7 +112,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{name}-%{version}-doc/*
 %{_libdir}/%{ghcdir}/package.conf.d/%{pkgname}.conf
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/*.so
+%attr(755,root,root) %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/*.so
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/*.a
 %exclude %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/*_p.a
 
